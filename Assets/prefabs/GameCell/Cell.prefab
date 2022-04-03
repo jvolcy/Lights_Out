@@ -101,6 +101,7 @@ MonoBehaviour:
   UnLitSprite: {fileID: 21300000, guid: 9266b3c84a48e472e9c8c54e734cb3b0, type: 3}
   XPosition: 0
   YPosition: 0
+  NeedsToggle: 0
 --- !u!61 &8119859470315302392
 BoxCollider2D:
   m_ObjectHideFlags: 0

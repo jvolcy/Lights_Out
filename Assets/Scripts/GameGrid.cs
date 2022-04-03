@@ -1,25 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameGrid : MonoBehaviour
 {
+    public TMP_Text NumLit;
+    public TMP_Text NumClicks;
+    public TMP_Text Win;
+
     public GameCell GameCellPrefab;
     public int GridWidth = 5;
     public int GridHeight = 5;
     public float GridSpacing = 0.05f;
+
+    int num_clicks = 0;
     GameCell[,] Grid;
+    bool won = false;
 
     // Start is called before the first frame update
     void Start()
     {
         CreateGrid();
-        InitializeGrid(5);
+        InitializeGrid(20);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (won) return;
+
         //check if any cell has been clicked
         for (int i = 0; i < GridWidth; i++)
             for (int j = 0; j < GridHeight; j++)
@@ -27,6 +37,10 @@ public class GameGrid : MonoBehaviour
                 if (Grid[i,j].NeedsToggle)
                 {
                     ToggleNeighborhood(i, j);
+
+                    num_clicks++;
+                    NumClicks.text = "  # Clicks: " + num_clicks.ToString();
+
                 }
             }
     }
@@ -62,14 +76,14 @@ public class GameGrid : MonoBehaviour
     }
 
     //function to initialize the grid
-    void InitializeGrid(int NumLitCells)
+    void InitializeGrid(int RandomClicks)
     {
-        //loop until we have randomly lit the specified # of cells
-        while (GetNumLitCells() != NumLitCells)
+        //randomly click RandomClicks cells
+        for (int i=0; i< RandomClicks; i++)
         {
             int x = Random.Range(0, GridWidth);
             int y = Random.Range(0, GridHeight);
-            Grid[x,y].State = true;
+            ToggleNeighborhood(x, y);
         }
     }
 
@@ -111,5 +125,15 @@ public class GameGrid : MonoBehaviour
 
 
         Grid[i, j].NeedsToggle = false;
+
+        //update canvas text
+        int numLit = GetNumLitCells();
+        NumLit.text = "  # Lit: " + numLit.ToString();
+
+        if (numLit == 0)
+        {
+            won = true;
+            Win.enabled = true;
+        }
     }
 }
